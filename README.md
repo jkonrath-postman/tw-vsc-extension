@@ -1,6 +1,6 @@
 # TW VS Code Extension
 
-This is a minimal VS Code extension scaffold that adds a `TW` submenu to the file explorer context menu.
+This is a VS Code extension that adds a `TW` submenu to the file explorer context menu.
 
 ## Included commands
 
@@ -47,6 +47,12 @@ npx @vscode/vsce package
 
 Then install it in normal VS Code either by:
 
-Command Palette: Extensions: Install from VSIX...
+* Command Palette Cmd-Shift-P, then "Extensions: Install from VSIX..."
+
 Or CLI:
+
+```
 code --install-extension tw-vsc-extension-0.0.1.vsix
+```
+
+If you don't have `code`, Cmd-Shift-P then "Shell Command: Install 'code' command in PATH"
