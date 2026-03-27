@@ -1,0 +1,51 @@
+{
+  "name": "tw-vsc-extension",
+  "displayName": "TW VS Code Extension",
+  "description": "Adds TW explorer commands, including Copy LC Path.",
+  "version": "0.0.1",
+  "publisher": "local",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:tw.copyLcPath"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "tw.copyLcPath",
+        "title": "Copy LC Path",
+        "category": "TW"
+      }
+    ],
+    "submenus": [
+      {
+        "id": "tw.submenu",
+        "label": "TW"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "submenu": "tw.submenu",
+          "group": "navigation@100",
+          "when": "resourceScheme == file"
+        }
+      ],
+      "tw.submenu": [
+        {
+          "command": "tw.copyLcPath",
+          "when": "resourceScheme == file",
+          "group": "1_paths"
+        }
+      ]
+    }
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.7.1"
+  }
+}
