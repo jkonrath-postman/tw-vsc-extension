@@ -1,7 +1,7 @@
 {
   "name": "tw-vsc-extension",
   "displayName": "TW VS Code Extension",
-  "description": "Adds TW explorer commands, including Copy LC Path.",
+  "description": "Adds TW explorer commands, including Copy Relative Path.",
   "version": "0.0.1",
   "publisher": "local",
   "engines": {
@@ -11,14 +11,26 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:tw.copyLcPath"
+    "onCommand:tw.copyLcPath",
+    "onCommand:tw.copyLcUrl",
+    "onCommand:tw.copyLocalUrl"
   ],
   "main": "./extension.js",
   "contributes": {
     "commands": [
       {
         "command": "tw.copyLcPath",
-        "title": "Copy LC Path",
+        "title": "Copy Relative Path",
+        "category": "TW"
+      },
+      {
+        "command": "tw.copyLcUrl",
+        "title": "Copy LC URL",
+        "category": "TW"
+      },
+      {
+        "command": "tw.copyLocalUrl",
+        "title": "Copy Local URL",
         "category": "TW"
       }
     ],
@@ -39,6 +51,16 @@
       "tw.submenu": [
         {
           "command": "tw.copyLcPath",
+          "when": "resourceScheme == file",
+          "group": "1_paths"
+        },
+        {
+          "command": "tw.copyLcUrl",
+          "when": "resourceScheme == file",
+          "group": "1_paths"
+        },
+        {
+          "command": "tw.copyLocalUrl",
           "when": "resourceScheme == file",
           "group": "1_paths"
         }
