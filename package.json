@@ -2,7 +2,7 @@
   "name": "tw-vsc-extension",
   "displayName": "TW VS Code Extension",
   "description": "Adds TW explorer commands, including Copy Relative Path.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "local",
   "engines": {
     "vscode": "^1.85.0"
