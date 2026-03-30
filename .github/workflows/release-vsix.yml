@@ -1,0 +1,91 @@
+name: Release VSIX
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - package.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-vsix-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Determine release metadata
+        id: release_info
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          current_version=$(node -p "require('./package.json').version")
+          current_tag="v${current_version}"
+          asset_name="tw-vsc-extension-${current_version}.vsix"
+          asset_path="dist/${asset_name}"
+          previous_version=""
+
+          if [ "${{ github.event_name }}" = "push" ] && [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+            previous_version=$(
+              git show "${{ github.event.before }}:package.json" 2>/dev/null | \
+              node -e "let input=''; process.stdin.on('data', (chunk) => input += chunk); process.stdin.on('end', () => { try { process.stdout.write(JSON.parse(input).version || ''); } catch { process.stdout.write(''); } });"
+            )
+          fi
+
+          release_needed=true
+          if [ -n "${previous_version}" ] && [ "${previous_version}" = "${current_version}" ]; then
+            release_needed=false
+          fi
+
+          if gh release view "${current_tag}" >/dev/null 2>&1; then
+            release_needed=false
+          fi
+
+          mkdir -p dist
+
+          {
+            echo "current_version=${current_version}"
+            echo "current_tag=${current_tag}"
+            echo "asset_name=${asset_name}"
+            echo "asset_path=${asset_path}"
+            echo "release_needed=${release_needed}"
+          } >> "${GITHUB_OUTPUT}"
+
+      - name: Stop when version did not change
+        if: steps.release_info.outputs.release_needed != 'true'
+        run: echo "No new package.json version to release."
+
+      - name: Install dependencies
+        if: steps.release_info.outputs.release_needed == 'true'
+        run: npm ci
+
+      - name: Build VSIX
+        if: steps.release_info.outputs.release_needed == 'true'
+        run: npx @vscode/vsce package --out "${{ steps.release_info.outputs.asset_path }}"
+
+      - name: Create GitHub release
+        if: steps.release_info.outputs.release_needed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.release_info.outputs.current_tag }}" \
+            "${{ steps.release_info.outputs.asset_path }}" \
+            --title "${{ steps.release_info.outputs.current_tag }}" \
+            --generate-notes

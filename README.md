@@ -36,12 +36,23 @@ becomes:
 2. Press `F5` to launch an Extension Development Host.
 3. In the development host, right-click a matching file in the explorer and choose `TW > Copy Relative Path`.
 
-## Build/deploy
+## Build locally
 
 ```
 npm install -D @vscode/vsce
 npx @vscode/vsce package
 ```
+
+## Automated releases
+
+When the `version` in `package.json` changes on `main`, GitHub Actions will:
+
+1. Build a new `.vsix`
+2. Create a Git tag like `v0.0.2`
+3. Create a GitHub Release for that tag
+4. Upload the `.vsix` as the release asset
+
+The built file is published to the GitHub Release, not committed into the repo.
 
 ## Run
 
