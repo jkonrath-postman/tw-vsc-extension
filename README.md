@@ -30,6 +30,26 @@ becomes:
 
 `localhost:3000/docs/administration/domain-verification-and-capture/add-and-verify-a-domain/`
 
+## Install with Command Palette
+
+1. Open the **Command Palette** (Cmd+Shift+P on Mac).
+1. Enter "Extensions: Install from VSIX...".
+1. Select the `.vsix` file.
+
+## In the Extensions sidebar
+
+1. Open the **Extensions** panel (Cmd+Shift+X).
+1. Click `...` menu in the top-right of the panel.
+1. Select **Install from VSIX...**.
+1. Find to your `.vsix` file.
+
+## In the terminal
+
+Run the following command in your terminal:
+
+`code --install-extension /path/to/your-extension.vsix`
+
+
 ## Running locally
 
 1. Open this folder in VS Code.
